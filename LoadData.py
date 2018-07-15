@@ -10,7 +10,7 @@ import ProteinModelTrain as PMT
 import numpy as np
 from tensorflow.python import debug as tf_debug
 
-
+"""
 trainingModule = JC.loadJsonDatabaseTraining()
 InputSize = 530
 
@@ -45,6 +45,6 @@ for i in range(len(trainingModule)):
     
 Xparams = Xparams[:, 1:]
 Yparams = Yparams[:, 1:]
+"""
 
-
-weights = PMT.trainModel(Xparams, Yparams, networkShape = [4,4,3])
+weights = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 3])

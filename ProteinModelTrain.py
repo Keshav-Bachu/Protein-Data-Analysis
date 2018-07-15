@@ -107,7 +107,9 @@ def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_ra
             
         parameters = sess.run(placeholders)
         #tf.eval(Zfinal)
-        prediction = tf.equal(tf.greater(Zfinal, tf.constant(0.5)), tf.greater(Y, tf.constant(0.5)))
+        
+        #confidance level of 75% can be adjusted later
+        prediction = tf.logical_and(tf.greater(Zfinal, Y * 0.75), tf.less(Zfinal, Y * 1.25))
         accuracy = tf.reduce_mean(tf.cast(prediction, "float"))
         print ("Train Accuracy:", accuracy.eval({X: xTest, Y: yTest}))
         #print ("Test Accuracy:", accuracy.eval({X: xDev, Y: yDev}))
