@@ -12,21 +12,33 @@ import numpy as np
 
 trainingModule = JC.loadJsonDatabaseTraining()
 
-Yparams = []
-Xparams = []
+Yparams = np.zeros((3,1))
+Xparams = np.zeros((200,1))
 
 #loop through and extract the data
 for i in range(len(trainingModule)):
-    #load in the X and Y params
-    Yparams.append(trainingModule[i]['meta']['conditions'])
-    Xparams.append(np.asarray(trainingModule[i]['data']['disorder']))
+    #load in and format the X parameters
+    XparamsTemp = np.asarray(trainingModule[i]['data']['disorder'])
     
     #zero padding to keep inputs the same size
-    zero_pad = np.zeros((1, 200 - len(Xparams[i])))
-    Xparams[i] = np.append(Xparams[i], zero_pad)
-    Xparams[i] = Xparams[i].reshape(200, 1)
+    zero_pad = np.zeros((1, 200 - len(XparamsTemp)))
+    XparamsTemp = np.append(XparamsTemp, zero_pad)
+    XparamsTemp = XparamsTemp.reshape(200, 1)
     
     #remove all NaNs, and replace with 0 as a representation of not used
-    where_are_NaNs = np.isnan(Xparams[i])
-    Xparams[i][where_are_NaNs] = 0
+    where_are_NaNs = np.isnan(XparamsTemp)
+    XparamsTemp[where_are_NaNs] = 0
     
+    Xparams = np.append(Xparams, XparamsTemp, 1)
+    
+    #Load in and format the Y parameters
+    YparamsTemp = (trainingModule[i]['meta']['conditions']['pH'])
+    YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['ionic strength'])
+    YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['temperature'])
+    YparamsTemp = YparamsTemp.reshape(3,1)
+    
+    Yparams = np.append(Yparams, YparamsTemp, 1)
+    
+    
+Xparams = Xparams[:, 1:]
+Yparams = Yparams[:, 1:]
