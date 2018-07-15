@@ -10,9 +10,9 @@ import ProteinModelTrain as PMT
 import numpy as np
 from tensorflow.python import debug as tf_debug
 
-"""
+
 trainingModule = JC.loadJsonDatabaseTraining()
-InputSize = 530
+InputSize = 100
 
 Yparams = np.zeros((3,1))
 Xparams = np.zeros((InputSize,1))
@@ -23,28 +23,29 @@ for i in range(len(trainingModule)):
     XparamsTemp = np.asarray(trainingModule[i]['data']['disorder'])
     
     #zero padding to keep inputs the same size
-    print(len(XparamsTemp))
-    zero_pad = np.zeros((1, InputSize - len(XparamsTemp)))
-    XparamsTemp = np.append(XparamsTemp, zero_pad)
-    XparamsTemp = XparamsTemp.reshape(InputSize, 1)
-    
-    #remove all NaNs, and replace with 0 as a representation of not used
-    where_are_NaNs = np.isnan(XparamsTemp)
-    XparamsTemp[where_are_NaNs] = 0
-    
-    Xparams = np.append(Xparams, XparamsTemp, 1)
-    
-    #Load in and format the Y parameters
-    YparamsTemp = (trainingModule[i]['meta']['conditions']['pH'])
-    YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['ionic strength'])
-    YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['temperature'])
-    YparamsTemp = YparamsTemp.reshape(3,1)
-    
-    Yparams = np.append(Yparams, YparamsTemp, 1)
+    if(len(XparamsTemp) <  InputSize):
+        print(len(XparamsTemp))
+        zero_pad = np.zeros((1, InputSize - len(XparamsTemp)))
+        XparamsTemp = np.append(XparamsTemp, zero_pad)
+        XparamsTemp = XparamsTemp.reshape(InputSize, 1)
+        
+        #remove all NaNs, and replace with 0 as a representation of not used
+        where_are_NaNs = np.isnan(XparamsTemp)
+        XparamsTemp[where_are_NaNs] = 0
+        
+        Xparams = np.append(Xparams, XparamsTemp, 1)
+        
+        #Load in and format the Y parameters
+        YparamsTemp = (trainingModule[i]['meta']['conditions']['pH'])
+        YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['ionic strength'])
+        YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['temperature'])
+        YparamsTemp = YparamsTemp.reshape(3,1)
+        
+        Yparams = np.append(Yparams, YparamsTemp, 1)
     
     
 Xparams = Xparams[:, 1:]
 Yparams = Yparams[:, 1:]
-"""
+
 
 weights = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 3])
