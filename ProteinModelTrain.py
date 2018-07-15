@@ -11,13 +11,15 @@ import matplotlib.pyplot as plt
 import math
 import numpy as np
 
+
 #Creates the placeholders for X and Y
 #Placeholders represent what will be placed as an input later on when generating the model, unknown number of examples
 #which allows one to evaluate as many examples as needed (minus things like memory limitations etc)
 def createPlaceholders(X, Y):
     Xshape = X.shape[0]
+    Yshape = Y.shape[0]
     Xplace = tf.placeholder(tf.float32, shape = (Xshape, None))
-    Yplace = tf.placeholder(tf.float32, shape = (1, None))  
+    Yplace = tf.placeholder(tf.float32, shape = (Yshape, None))  
     
     return Xplace, Yplace
 
@@ -57,10 +59,13 @@ def forwardProp(X, placeholders):
 
 #Cost function for this sigmoid network
 def computeCost(finalZ, Y):
-    logits = tf.transpose(finalZ)
-    labels = tf.transpose(Y)
+    #logits = tf.transpose(finalZ)
+    #labels = tf.transpose(Y)
     
-    cost = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits = logits, labels = labels))
+    logits = finalZ
+    labels = Y
+    
+    cost = tf.nn.softmax_cross_entropy_with_logits(logits = logits, labels = labels)
     return cost
 
 #Training the model, X and Y inputs for training and testing NN
@@ -68,7 +73,7 @@ def computeCost(finalZ, Y):
 #Learning rate - step size of backprop
 #iterations -  Number of iterations of NN
 #print_cost - controles if cost is printed every 100 iterations
-def trainModel(xTest, yTest,xDev, yDev,  networkShape,  learning_rate = 0.0001, itterations = 1500, print_Cost = True):
+def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_rate = 0.0001, itterations = 1500, print_Cost = True):
  
     ops.reset_default_graph()
     costs = []                      #used to graph the costs at the end for a visual overview/analysis
@@ -105,8 +110,8 @@ def trainModel(xTest, yTest,xDev, yDev,  networkShape,  learning_rate = 0.0001, 
         prediction = tf.equal(tf.greater(Zfinal, tf.constant(0.5)), tf.greater(Y, tf.constant(0.5)))
         accuracy = tf.reduce_mean(tf.cast(prediction, "float"))
         print ("Train Accuracy:", accuracy.eval({X: xTest, Y: yTest}))
-        print ("Test Accuracy:", accuracy.eval({X: xDev, Y: yDev}))
-        plt.plot(costs)
+        #print ("Test Accuracy:", accuracy.eval({X: xDev, Y: yDev}))
+        #plt.plot(costs)
         
         #Ztest = sess.run(Zfinal, feed_dict={X:xTest, Y: yTest})
         #Ztest = Ztest >= 0.5

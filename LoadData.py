@@ -8,12 +8,14 @@ Created on Wed Jul 11 14:36:27 2018
 import JSONConversion as JC
 import ProteinModelTrain as PMT
 import numpy as np
+from tensorflow.python import debug as tf_debug
 
 
 trainingModule = JC.loadJsonDatabaseTraining()
+InputSize = 530
 
 Yparams = np.zeros((3,1))
-Xparams = np.zeros((200,1))
+Xparams = np.zeros((InputSize,1))
 
 #loop through and extract the data
 for i in range(len(trainingModule)):
@@ -21,9 +23,10 @@ for i in range(len(trainingModule)):
     XparamsTemp = np.asarray(trainingModule[i]['data']['disorder'])
     
     #zero padding to keep inputs the same size
-    zero_pad = np.zeros((1, 200 - len(XparamsTemp)))
+    print(len(XparamsTemp))
+    zero_pad = np.zeros((1, InputSize - len(XparamsTemp)))
     XparamsTemp = np.append(XparamsTemp, zero_pad)
-    XparamsTemp = XparamsTemp.reshape(200, 1)
+    XparamsTemp = XparamsTemp.reshape(InputSize, 1)
     
     #remove all NaNs, and replace with 0 as a representation of not used
     where_are_NaNs = np.isnan(XparamsTemp)
@@ -42,3 +45,6 @@ for i in range(len(trainingModule)):
     
 Xparams = Xparams[:, 1:]
 Yparams = Yparams[:, 1:]
+
+
+weights = PMT.trainModel(Xparams, Yparams, networkShape = [4,4,3])
