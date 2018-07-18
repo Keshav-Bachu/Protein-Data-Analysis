@@ -31,7 +31,6 @@ def createVariables(networkShape):
     
     for i in range(1, len(networkShape)):
         placeholders['W' + str(i)] = tf.get_variable(name = 'W' + str(i), shape=[networkShape[i], networkShape[i - 1]], initializer=tf.contrib.layers.xavier_initializer())
-        placeholders['W' + str(i)] = placeholders['W' + str(i)] * 0.01
         placeholders['b' + str(i)] = tf.get_variable(name = 'b' + str(i), shape=[networkShape[i], 1], initializer=tf.zeros_initializer())
     return placeholders
 
@@ -66,7 +65,8 @@ def computeCost(finalZ, Y):
     logits = finalZ
     labels = Y
     
-    cost = tf.nn.softmax_cross_entropy_with_logits(logits = logits, labels = labels)
+    #cost = tf.nn.softmax_cross_entropy_with_logits(logits = logits, labels = labels)
+    cost = tf.reduce_mean(tf.squared_difference(logits, labels))
     return cost
 
 #Training the model, X and Y inputs for training and testing NN
@@ -107,6 +107,7 @@ def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_ra
             
             
         parameters = sess.run(placeholders)
+        Youtput = Zfinal.eval({X: xTest, Y: yTest})
         #tf.eval(Zfinal)
         
         #confidance level of 75% can be adjusted later
@@ -127,4 +128,4 @@ def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_ra
         #accuracy = tf.reduce_mean(tf.cast(prediction, "float"))
     
         #print ("Train Accuracy:", accuracy.eval({X: xTest, Y: yTest}))
-    return parameters
+    return parameters, Youtput

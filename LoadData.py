@@ -55,4 +55,4 @@ Xparams = Xparams[:, 1:]
 Yparams = Yparams[:, 1:]
 
 
-weights = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 1])
+weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 1])
