@@ -1,0 +1,23 @@
+Smaller dataset trained on, output listed here, weights also saved in "weightsOverall.npy":
+
+Current cost of the function after itteraton 0 is:      34149.375
+Current cost of the function after itteraton 100 is:    25973.398
+Current cost of the function after itteraton 200 is:    2116.7896
+Current cost of the function after itteraton 300 is:    1365.8746
+Current cost of the function after itteraton 400 is:    1117.9451
+Current cost of the function after itteraton 500 is:    907.7714
+Current cost of the function after itteraton 600 is:    737.1631
+Current cost of the function after itteraton 700 is:    605.28656
+Current cost of the function after itteraton 800 is:    513.2914
+Current cost of the function after itteraton 900 is:    459.27954
+Current cost of the function after itteraton 1000 is:   430.23212
+Current cost of the function after itteraton 1100 is:   415.06848
+Current cost of the function after itteraton 1200 is:   405.9725
+Current cost of the function after itteraton 1300 is:   398.23416
+Current cost of the function after itteraton 1400 is:   388.35657
+Current cost of the function after itteraton 1500 is:   367.85587
+Current cost of the function after itteraton 1600 is:   321.74286
+Current cost of the function after itteraton 1700 is:   250.93797
+Current cost of the function after itteraton 1800 is:   181.41264
+Current cost of the function after itteraton 1900 is:   126.29717
+Train Accuracy: 0.8401084

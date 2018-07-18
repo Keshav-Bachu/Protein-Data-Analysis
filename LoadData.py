@@ -12,9 +12,9 @@ from tensorflow.python import debug as tf_debug
 
 
 trainingModule = JC.loadJsonDatabaseTraining()
-InputSize = 100
+InputSize = 600
 
-Yparams = np.zeros((1,1))
+Yparams = np.zeros((3,1))
 Xparams = np.zeros((InputSize,1))
 
 #loop through and extract the data
@@ -35,24 +35,54 @@ for i in range(len(trainingModule)):
         
         Xparams = np.append(Xparams, XparamsTemp, 1)
         
-        """
+        
         #Load in and format the Y parameters
         YparamsTemp = (trainingModule[i]['meta']['conditions']['pH'])
         YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['ionic strength'])
-        #YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['temperature'])
-        YparamsTemp = YparamsTemp.reshape(2,1)
+        YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['temperature'])
+        YparamsTemp = YparamsTemp.reshape(3,1)
         
         Yparams = np.append(Yparams, YparamsTemp, 1)
+        
+        
         """
-        
-        
-        YparamsTemp = np.asarray(trainingModule[i]['meta']['conditions']['pH'])
+        YparamsTemp = np.asarray(trainingModule[i]['meta']['conditions']['ionic strength'])
         YparamsTemp = YparamsTemp.reshape(1,1)
         Yparams = np.append(Yparams, YparamsTemp, 1)
-        
+        """
     
 Xparams = Xparams[:, 1:]
 Yparams = Yparams[:, 1:]
 
+#test network
+#weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 1])
 
-weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 1])
+#final network, shape tennative
+weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [256, 256, 128, 128, 64, 32, 16, 8, 4, 3], itterations = 2000)
+
+
+
+"""
+Reference to storing the numpy weights
+In [819]: N
+Out[819]: 
+array([[  0.,   1.,   2.,   3.],
+       [  4.,   5.,   6.,   7.],
+       [  8.,   9.,  10.,  11.]])
+In [820]: data={'N':N}
+In [821]: np.save('temp.npy',data)
+In [822]: data2=np.load('temp.npy')
+          then use np.ndarray.tolist to get back dictionary of weights to input in again!
+          useful for retraining weights, for a controlled model
+In [823]: data2
+Out[823]: 
+array({'N': array([[  0.,   1.,   2.,   3.],
+       [  4.,   5.,   6.,   7.],
+       [  8.,   9.,  10.,  11.]])}, dtype=object)
+    
+In [826]: data2[()]['N']
+Out[826]: 
+array([[  0.,   1.,   2.,   3.],
+       [  4.,   5.,   6.,   7.],
+       [  8.,   9.,  10.,  11.]])
+"""
