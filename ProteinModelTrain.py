@@ -31,6 +31,7 @@ def createVariables(networkShape):
     
     for i in range(1, len(networkShape)):
         placeholders['W' + str(i)] = tf.get_variable(name = 'W' + str(i), shape=[networkShape[i], networkShape[i - 1]], initializer=tf.contrib.layers.xavier_initializer())
+        placeholders['W' + str(i)] = placeholders['W' + str(i)] * 0.01
         placeholders['b' + str(i)] = tf.get_variable(name = 'b' + str(i), shape=[networkShape[i], 1], initializer=tf.zeros_initializer())
     return placeholders
 
@@ -113,7 +114,7 @@ def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_ra
         accuracy = tf.reduce_mean(tf.cast(prediction, "float"))
         print ("Train Accuracy:", accuracy.eval({X: xTest, Y: yTest}))
         #print ("Test Accuracy:", accuracy.eval({X: xDev, Y: yDev}))
-        #plt.plot(costs)
+        plt.plot(costs)
         
         #Ztest = sess.run(Zfinal, feed_dict={X:xTest, Y: yTest})
         #Ztest = Ztest >= 0.5

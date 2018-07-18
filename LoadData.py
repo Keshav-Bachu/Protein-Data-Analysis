@@ -14,7 +14,7 @@ from tensorflow.python import debug as tf_debug
 trainingModule = JC.loadJsonDatabaseTraining()
 InputSize = 100
 
-Yparams = np.zeros((3,1))
+Yparams = np.zeros((1,1))
 Xparams = np.zeros((InputSize,1))
 
 #loop through and extract the data
@@ -35,17 +35,24 @@ for i in range(len(trainingModule)):
         
         Xparams = np.append(Xparams, XparamsTemp, 1)
         
+        """
         #Load in and format the Y parameters
         YparamsTemp = (trainingModule[i]['meta']['conditions']['pH'])
         YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['ionic strength'])
-        YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['temperature'])
-        YparamsTemp = YparamsTemp.reshape(3,1)
+        #YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['temperature'])
+        YparamsTemp = YparamsTemp.reshape(2,1)
         
         Yparams = np.append(Yparams, YparamsTemp, 1)
-    
+        """
+        
+        
+        YparamsTemp = np.asarray(trainingModule[i]['meta']['conditions']['pH'])
+        YparamsTemp = YparamsTemp.reshape(1,1)
+        Yparams = np.append(Yparams, YparamsTemp, 1)
+        
     
 Xparams = Xparams[:, 1:]
 Yparams = Yparams[:, 1:]
 
 
-weights = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 3])
+weights = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 1])
