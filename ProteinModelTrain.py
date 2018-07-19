@@ -48,7 +48,7 @@ def forwardProp(X, placeholders, networkShape):
     pass_Z = tf.matmul(val2W, val1) + val2b
     pass_A = tf.nn.relu(pass_Z)
     
-#    """
+    """
     for i in range (1, totalLength):
         val_W = placeholders['W' + str(i + 1)]
         val_b = placeholders['b' + str(i + 1)]
@@ -66,10 +66,10 @@ def forwardProp(X, placeholders, networkShape):
         val_b = placeholders['b' + str(i + 1)]
         
         pass_Z = tf.matmul(val_W, pass_A) + val_b
-        if(value != networkShape[i]):
+        if(value != networkShape[i + 1]):
             pass_A = tf.nn.relu(pass_Z)
             counter = 1;
-            value = networkShape[i]
+            value = networkShape[i + 1]
         elif(value == networkShape[i]):
             if(counter == 1):
                 pass_A = tf.nn.relu(pass_Z)
@@ -85,7 +85,7 @@ def forwardProp(X, placeholders, networkShape):
                 pass_A = tf.nn.relu(pass_Z + hold_A)
                 counter = 0;
     
-    """        
+#    """        
     return pass_Z
 
 #Cost function for this sigmoid network
