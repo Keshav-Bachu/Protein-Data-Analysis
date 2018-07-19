@@ -17,6 +17,6 @@ def loadJsonDatabase():
 def loadJsonDatabaseTraining():
     jsonFile = open('database.json')
     jsonStr = jsonFile.read()
-    jsonData = json.loads(jsonStr)[0:7000]
+    jsonData = json.loads(jsonStr)[0:300]
     return jsonData
     

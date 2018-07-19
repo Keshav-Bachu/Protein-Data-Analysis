@@ -36,7 +36,7 @@ def createVariables(networkShape):
 
 
 #Forward propogation using a, relu and sigmoid function on respective layers (relu 1 - n-1 layer and sigmoid for n layer)
-def forwardProp(X, placeholders):
+def forwardProp(X, placeholders, networkShape):
     #total number of parameters in the network, divided by 2 for the number of layers within it with X being 0
     totalLength = len(placeholders)/2
     totalLength = int(totalLength)
@@ -48,13 +48,44 @@ def forwardProp(X, placeholders):
     pass_Z = tf.matmul(val2W, val1) + val2b
     pass_A = tf.nn.relu(pass_Z)
     
+#    """
     for i in range (1, totalLength):
         val_W = placeholders['W' + str(i + 1)]
         val_b = placeholders['b' + str(i + 1)]
         
         pass_Z = tf.matmul(val_W, pass_A) + val_b
         pass_A = tf.nn.relu(pass_Z)
-            
+    
+    """
+    #ResNet techneque, must use residual blocks!
+    hold_A = pass_A
+    value = networkShape[0]
+    counter = 0
+    for i in range (1, totalLength):
+        val_W = placeholders['W' + str(i + 1)]
+        val_b = placeholders['b' + str(i + 1)]
+        
+        pass_Z = tf.matmul(val_W, pass_A) + val_b
+        if(value != networkShape[i]):
+            pass_A = tf.nn.relu(pass_Z)
+            counter = 1;
+            value = networkShape[i]
+        elif(value == networkShape[i]):
+            if(counter == 1):
+                pass_A = tf.nn.relu(pass_Z)
+                hold_A = pass_A
+                counter += 1
+                
+            elif(counter == 2):
+                pass_A = tf.nn.relu(pass_Z)
+                counter += 1
+             
+            #counter is 3 in this case, pass forward the weights                
+            else:
+                pass_A = tf.nn.relu(pass_Z + hold_A)
+                counter = 0;
+    
+    """        
     return pass_Z
 
 #Cost function for this sigmoid network
@@ -87,7 +118,7 @@ def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_ra
     placeholders = createVariables(networkShape)
     
     #define how Z and cost should be calculated
-    Zfinal = forwardProp(X, placeholders)
+    Zfinal = forwardProp(X, placeholders, networkShape)
     cost = computeCost(Zfinal, Y)
     optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(cost)
     

@@ -55,10 +55,11 @@ Xparams = Xparams[:, 1:]
 Yparams = Yparams[:, 1:]
 
 #test network
-#weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 1])
+weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 4, 4, 3])
 
 #final network, shape tennative
-weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 256, 256, 128, 128, 64, 32, 16, 8, 4, 3], itterations = 2000)
+#weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 256, 256, 256, 128, 128, 64, 32, 16, 8, 4, 3], itterations = 2000)
+
 
 
 
