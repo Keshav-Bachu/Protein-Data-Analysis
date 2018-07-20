@@ -97,7 +97,17 @@ def computeCost(finalZ, Y):
     labels = Y
     
     #cost = tf.nn.softmax_cross_entropy_with_logits(logits = logits, labels = labels)
-    cost = tf.reduce_mean(tf.squared_difference(logits, labels))
+    #cost = tf.reduce_mean(tf.squared_difference(logits, labels))
+    
+    
+    a = tf.pow(tf.log(tf.abs(10 * logits[0, :] - 10 * labels[0, :])), 2)
+    #a = tf.squared_difference(logits[1, :], labels[1, :])
+    b = tf.squared_difference(logits[1, :], labels[1, :])
+    c = tf.squared_difference(logits[2, :], labels[2, :])
+    fin = tf.stack([a,b,c])
+    cost = tf.reduce_mean(fin)
+    
+    
     return cost
 
 #Training the model, X and Y inputs for training and testing NN

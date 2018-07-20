@@ -9,6 +9,7 @@ import JSONConversion as JC
 import ProteinModelTrain as PMT
 import numpy as np
 from tensorflow.python import debug as tf_debug
+import time
 
 
 trainingModule = JC.loadJsonDatabaseTraining()
@@ -54,12 +55,17 @@ for i in range(len(trainingModule)):
 Xparams = Xparams[:, 1:]
 Yparams = Yparams[:, 1:]
 
+#time used to test runtime of various changes to in calculating cost etc.
+start_time = time.time()
+
 #test network
-weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 4, 4, 3])
+#weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 4, 4, 3])
 
 #final network, shape tennative
-#weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 256, 256, 256, 128, 128, 64, 32, 16, 8, 4, 3], itterations = 2000)
+weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 128, 128, 64, 32, 16, 8, 4, 3], itterations = 2000)
 
+
+print("--- %s seconds ---" % (time.time() - start_time))
 
 
 
