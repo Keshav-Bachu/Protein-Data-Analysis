@@ -91,6 +91,12 @@ def forwardProp(X, placeholders, networkShape):
             else:
                 pass_A = tf.nn.relu(pass_Z + hold_A)
                 counter = 0;
+        
+        #prevents values from going too high, usually not needed
+        #pass_A = tf.clip_by_value(pass_A, clip_value_min = -1000, clip_value_max = 1000)
+        
+        #prevents gradieonts from going too low, only works with relu as relu does not have negative numbers
+        pass_A = tf.clip_by_value(pass_A, 0.01, 1000)
     
 #    """        
     return pass_Z
@@ -104,16 +110,16 @@ def computeCost(finalZ, Y):
     labels = Y
     
     #cost = tf.nn.softmax_cross_entropy_with_logits(logits = logits, labels = labels)
-    #cost = tf.reduce_mean(tf.squared_difference(logits, labels))
+    cost = tf.reduce_mean(tf.squared_difference(logits, labels))
     
-    
-    a = tf.pow(tf.log(tf.abs(10 * logits[0, :] - 10 * labels[0, :])), 2)
+    """
+    a = tf.pow(tf.log(tf.abs(10 * logits[0, :] - 10 * labels[0, :]) + 10**-8), 2)
     #a = tf.squared_difference(logits[1, :], labels[1, :])
     b = tf.squared_difference(logits[1, :], labels[1, :])
     c = tf.squared_difference(logits[2, :], labels[2, :])
     fin = tf.stack([a,b,c])
     cost = tf.reduce_mean(fin)
-    
+    """
     
     return cost
 
