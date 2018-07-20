@@ -34,6 +34,13 @@ def createVariables(networkShape):
         placeholders['b' + str(i)] = tf.get_variable(name = 'b' + str(i), shape=[networkShape[i], 1], initializer=tf.zeros_initializer())
     return placeholders
 
+def setVariables(weightsExist):
+    placeholders = {}
+    
+    for key in weightsExist:
+        placeholders[key] = tf.get_variable(name = key, initializer=weightsExist[key])
+    return placeholders
+
 
 #Forward propogation using a, relu and sigmoid function on respective layers (relu 1 - n-1 layer and sigmoid for n layer)
 def forwardProp(X, placeholders, networkShape):
@@ -115,7 +122,7 @@ def computeCost(finalZ, Y):
 #Learning rate - step size of backprop
 #iterations -  Number of iterations of NN
 #print_cost - controles if cost is printed every 100 iterations
-def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_rate = 0.0001, itterations = 1500, print_Cost = True):
+def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_rate = 0.0001, itterations = 1500, print_Cost = True, weightsExist = None):
  
     ops.reset_default_graph()
     costs = []                      #used to graph the costs at the end for a visual overview/analysis
@@ -125,7 +132,10 @@ def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_ra
     networkShape.insert(0, Xlen)
     
     X, Y = createPlaceholders(xTest, yTest)
-    placeholders = createVariables(networkShape)
+    if(weightsExist == None):
+        placeholders = createVariables(networkShape)
+    else:
+        placeholders = setVariables(weightsExist)
     
     #define how Z and cost should be calculated
     Zfinal = forwardProp(X, placeholders, networkShape)

@@ -11,7 +11,7 @@ import numpy as np
 from tensorflow.python import debug as tf_debug
 import time
 
-
+"""
 trainingModule = JC.loadJsonDatabaseTraining()
 InputSize = 600
 
@@ -46,15 +46,17 @@ for i in range(len(trainingModule)):
         Yparams = np.append(Yparams, YparamsTemp, 1)
         
         
-        """
+        #loads only 1, for testing
         YparamsTemp = np.asarray(trainingModule[i]['meta']['conditions']['ionic strength'])
         YparamsTemp = YparamsTemp.reshape(1,1)
         Yparams = np.append(Yparams, YparamsTemp, 1)
-        """
+        
+        
     
 Xparams = Xparams[:, 1:]
 Yparams = Yparams[:, 1:]
 
+"""
 #time used to test runtime of various changes to in calculating cost etc.
 start_time = time.time()
 
@@ -62,10 +64,11 @@ start_time = time.time()
 #weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 4, 4, 3])
 
 #final network, shape tennative
-weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 128, 128, 64, 32, 16, 8, 4, 3], itterations = 2000)
+weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 128, 128, 64, 32, 16, 8, 4, 3], itterations = 10000)
 
 
 print("--- %s seconds ---" % (time.time() - start_time))
+
 
 
 
@@ -92,4 +95,7 @@ Out[826]:
 array([[  0.,   1.,   2.,   3.],
        [  4.,   5.,   6.,   7.],
        [  8.,   9.,  10.,  11.]])
+    
+    to dict is:
+        data2 = data2[()]
 """
