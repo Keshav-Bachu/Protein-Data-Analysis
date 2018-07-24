@@ -32,25 +32,25 @@ for i in range(len(trainingModule)):
         
         #remove all NaNs, and replace with 0 as a representation of not used
         where_are_NaNs = np.isnan(XparamsTemp)
-        XparamsTemp[where_are_NaNs] = 0
+        XparamsTemp[where_are_NaNs] = -1
         
         Xparams = np.append(Xparams, XparamsTemp, 1)
         
         
         #Load in and format the Y parameters
         YparamsTemp = (trainingModule[i]['meta']['conditions']['pH'])
-        YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['ionic strength'])
-        YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['temperature'])
+        YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['ionic strength'])/5
+        YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['temperature'])/100
         YparamsTemp = YparamsTemp.reshape(3,1)
         
         Yparams = np.append(Yparams, YparamsTemp, 1)
         
-        
+        '''
         #loads only 1, for testing
         YparamsTemp = np.asarray(trainingModule[i]['meta']['conditions']['ionic strength'])
         YparamsTemp = YparamsTemp.reshape(1,1)
         Yparams = np.append(Yparams, YparamsTemp, 1)
-        
+        '''
         
     
 Xparams = Xparams[:, 1:]
