@@ -10,6 +10,7 @@ from tensorflow.python.framework import ops
 import matplotlib.pyplot as plt
 import math
 import numpy as np
+from copy import copy
 
 
 #Creates the placeholders for X and Y
@@ -186,3 +187,26 @@ def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_ra
     
         #print ("Train Accuracy:", accuracy.eval({X: xTest, Y: yTest}))
     return parameters, Youtput
+
+
+def predictor(weights, networkShape, xTest, yTest):
+    ops.reset_default_graph()
+    
+    networkShape2 = copy(networkShape)
+    Xlen = xTest.shape[0]
+    networkShape2.insert(0, Xlen)
+    
+    X, Y = createPlaceholders(xTest, yTest)
+    placeholders = setVariables(weights)
+    Zfinal = forwardProp(X, placeholders, networkShape2)
+    
+    init = tf.global_variables_initializer()
+    with tf.Session() as sess:
+        sess.run(init)
+        
+        Youtput = Zfinal.eval({X: xTest, Y: yTest})
+        prediction = tf.logical_and(tf.greater(Zfinal, Y * 0.95), tf.less(Zfinal, Y * 1.05))
+        accuracy = tf.reduce_mean(tf.cast(prediction, "float"))
+        print ("Train Accuracy:", accuracy.eval({X: xTest, Y: yTest}))
+    
+    return Youtput

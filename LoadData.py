@@ -8,7 +8,6 @@ Created on Wed Jul 11 14:36:27 2018
 import JSONConversion as JC
 import ProteinModelTrain as PMT
 import numpy as np
-from tensorflow.python import debug as tf_debug
 import time
 
 """
