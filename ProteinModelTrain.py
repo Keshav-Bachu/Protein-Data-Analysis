@@ -111,16 +111,17 @@ def computeCost(finalZ, Y):
     labels = Y
     
     #cost = tf.nn.softmax_cross_entropy_with_logits(logits = logits, labels = labels)
-    cost = tf.reduce_mean(tf.squared_difference(logits, labels))
+    #cost = tf.reduce_mean(tf.squared_difference(logits, labels))
     
-    """
-    a = tf.pow(tf.log(tf.abs(10 * logits[0, :] - 10 * labels[0, :]) + 10**-8), 2)
+    
+    #a = tf.pow(tf.log(tf.abs(10 * logits[0, :] - 10 * labels[0, :]) + 10**-8), 2)
+    a = (1 / (2**0.5)) * tf.square(tf.sqrt(tf.abs(logits[0, :])) - tf.sqrt(tf.abs(labels[0, :])))   #Hellinger distance
     #a = tf.squared_difference(logits[1, :], labels[1, :])
     b = tf.squared_difference(logits[1, :], labels[1, :])
     c = tf.squared_difference(logits[2, :], labels[2, :])
     fin = tf.stack([a,b,c])
+    
     cost = tf.reduce_mean(fin)
-    """
     
     return cost
 
@@ -129,7 +130,7 @@ def computeCost(finalZ, Y):
 #Learning rate - step size of backprop
 #iterations -  Number of iterations of NN
 #print_cost - controles if cost is printed every 100 iterations
-def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_rate = 0.0001, itterations = 1500, print_Cost = True, weightsExist = None, minibatchSize = 1):
+def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_rate = 0.00001, itterations = 1500, print_Cost = True, weightsExist = None, minibatchSize = 1):
  
     ops.reset_default_graph()
     costs = []                      #used to graph the costs at the end for a visual overview/analysis
@@ -158,8 +159,10 @@ def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_ra
         sess.run(init)
         #temp_cost = 0 
         for itter in range(itterations):
+            
             mini_cost_total = 0
             minibatches = random_mini_batches(xTest, yTest, minibatchSize)
+            
             
             for minibatch in minibatches:
                 (mini_X, mini_Y) = minibatch
@@ -167,14 +170,17 @@ def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_ra
                 _, mini_cost = sess.run([optimizer, cost], feed_dict={X:mini_X, Y: mini_Y})
                 mini_cost_total += mini_cost / minibatchNumber
             
+            
             #_,temp_cost = sess.run([optimizer, cost], feed_dict={X:xTest, Y: yTest})
             
             if(itter % 100 == 0):
                 #print("Current cost of the function after itteraton " + str(itter) + " is: \t" + str(temp_cost))
                 print("Current mini-cost after itteration: " + str(itter) + " is: \t" + str(mini_cost_total))
                 
-            #costs.append(temp_cost)
-            costs.append(mini_cost_total)
+                
+            if(itter % 5 == 0):
+                costs.append(mini_cost_total)
+                #costs.append(temp_cost)
             
             
         parameters = sess.run(placeholders)

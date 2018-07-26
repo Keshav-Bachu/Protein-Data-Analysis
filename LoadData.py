@@ -37,7 +37,7 @@ for i in range(len(trainingModule)):
         
         
         #Load in and format the Y parameters
-        YparamsTemp = (trainingModule[i]['meta']['conditions']['pH'])/7
+        YparamsTemp = (trainingModule[i]['meta']['conditions']['pH'])/14
         YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['ionic strength']/5)
         YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['temperature']/300)
         YparamsTemp = YparamsTemp.reshape(3,1)
@@ -63,7 +63,7 @@ start_time = time.time()
 #weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 4, 4, 3])
 
 #final network, shape tennative
-weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 64, 64, 64, 64,128, 128, 32, 32, 32, 32, 3], itterations = 20000, minibatchSize= 100)
+weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 64, 64, 64, 64,128, 128, 32, 32, 32, 32, 3], itterations = 20000, learning_rate = 0.000005,  minibatchSize= 6995)
 
 
 print("--- %s seconds ---" % (time.time() - start_time))
