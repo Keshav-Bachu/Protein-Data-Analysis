@@ -129,7 +129,7 @@ def computeCost(finalZ, Y):
 #Learning rate - step size of backprop
 #iterations -  Number of iterations of NN
 #print_cost - controles if cost is printed every 100 iterations
-def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_rate = 0.0001, itterations = 1500, print_Cost = True, weightsExist = None):
+def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_rate = 0.0001, itterations = 1500, print_Cost = True, weightsExist = None, minibatchSize = 1):
  
     ops.reset_default_graph()
     costs = []                      #used to graph the costs at the end for a visual overview/analysis
@@ -150,18 +150,31 @@ def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_ra
     optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(cost)
     
     
+    numExamples = xTest.shape[1]
+    minibatchNumber = numExamples / minibatchSize
     #Set global variables and create a session
     init = tf.global_variables_initializer()
     with tf.Session() as sess:
         sess.run(init)
-        temp_cost = 0   
+        #temp_cost = 0 
         for itter in range(itterations):
-            _,temp_cost = sess.run([optimizer, cost], feed_dict={X:xTest, Y: yTest})
+            mini_cost_total = 0
+            minibatches = random_mini_batches(xTest, yTest, minibatchSize)
+            
+            for minibatch in minibatches:
+                (mini_X, mini_Y) = minibatch
+                
+                _, mini_cost = sess.run([optimizer, cost], feed_dict={X:mini_X, Y: mini_Y})
+                mini_cost_total += mini_cost / minibatchNumber
+            
+            #_,temp_cost = sess.run([optimizer, cost], feed_dict={X:xTest, Y: yTest})
             
             if(itter % 100 == 0):
-                print("Current cost of the function after itteraton " + str(itter) + " is: \t" + str(temp_cost))
+                #print("Current cost of the function after itteraton " + str(itter) + " is: \t" + str(temp_cost))
+                print("Current mini-cost after itteration: " + str(itter) + " is: \t" + str(mini_cost_total))
                 
-            costs.append(temp_cost)
+            #costs.append(temp_cost)
+            costs.append(mini_cost_total)
             
             
         parameters = sess.run(placeholders)
@@ -207,6 +220,38 @@ def predictor(weights, networkShape, xTest, yTest):
         Youtput = Zfinal.eval({X: xTest, Y: yTest})
         prediction = tf.logical_and(tf.greater(Zfinal, Y * 0.95), tf.less(Zfinal, Y * 1.05))
         accuracy = tf.reduce_mean(tf.cast(prediction, "float"))
+        checkVector = prediction.eval({X: xTest, Y: yTest})
         print ("Train Accuracy:", accuracy.eval({X: xTest, Y: yTest}))
     
-    return Youtput
+    return Youtput, checkVector
+
+
+
+#NOTE: CODE RECEIVED FROM COURSERA DEEP LEARNING SPECIALIZATION CODE
+def random_mini_batches(X, Y, mini_batch_size = 1):
+    
+    m = X.shape[1]                  # number of training examples
+    mini_batches = []
+    
+    # Step 1: Shuffle (X, Y)
+    permutation = list(np.random.permutation(m))
+    shuffled_X = X[:, permutation]
+    shuffled_Y = Y[:, permutation].reshape((Y.shape[0],m))
+
+    # Step 2: Partition (shuffled_X, shuffled_Y). Minus the end case.
+    num_complete_minibatches = math.floor(m/mini_batch_size) # number of mini batches of size mini_batch_size in your partitionning
+    for k in range(0, num_complete_minibatches):
+        mini_batch_X = shuffled_X[:, k * mini_batch_size : k * mini_batch_size + mini_batch_size]
+        mini_batch_Y = shuffled_Y[:, k * mini_batch_size : k * mini_batch_size + mini_batch_size]
+        mini_batch = (mini_batch_X, mini_batch_Y)
+        mini_batches.append(mini_batch)
+    
+    # Handling the end case (last mini-batch < mini_batch_size)
+    if m % mini_batch_size != 0:
+        mini_batch_X = shuffled_X[:, num_complete_minibatches * mini_batch_size : m]
+        mini_batch_Y = shuffled_Y[:, num_complete_minibatches * mini_batch_size : m]
+        mini_batch = (mini_batch_X, mini_batch_Y)
+        mini_batches.append(mini_batch)
+    
+    return mini_batches
+    
