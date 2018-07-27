@@ -64,7 +64,7 @@ start_time = time.time()
 #weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 4, 4, 3])
 
 #final network, shape tennative
-weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 64, 64, 64, 64,128, 128, 32, 32, 32, 32, 3], itterations = 10000,  minibatchSize= 1000, weightsExist = weights, learning_rate=0.000001)
+weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 64, 64, 64, 64,128, 128, 32, 32, 32, 32, 3], itterations = 10000,  minibatchSize= 1000, weightsExist = weights, learning_rate=0.0000001)
 
 
 print("--- %s seconds ---" % (time.time() - start_time))

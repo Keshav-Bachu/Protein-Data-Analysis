@@ -99,7 +99,12 @@ def forwardProp(X, placeholders, networkShape):
         #prevents gradieonts from going too low, only works with relu as relu does not have negative numbers
         pass_A = tf.clip_by_value(pass_A, 0.01, 1000)
     
-#    """        
+#    """
+    #Below is left as a note/reminder, you can't round a variable or gradient unfortunately 
+    #scale = tf.constant(2, dtype= pass_Z.dtype)
+    #pass_Z = tf.round(pass_Z * scale)/scale
+    #pass_Z = tf.round(pass_Z)
+    #pass_Z[1:, :] = tf.round(pass_Z[1:, :])
     return pass_Z
 
 #Cost function for this sigmoid network
@@ -223,10 +228,11 @@ def predictor(weights, networkShape, xTest, yTest):
     with tf.Session() as sess:
         sess.run(init)
         
-        Youtput = Zfinal.eval({X: xTest, Y: yTest})
+        Youtput = Zfinal.eval({X: xTest, Y: yTest}) 
+        
         prediction = tf.logical_and(tf.greater(Zfinal, Y * 0.95), tf.less(Zfinal, Y * 1.05))
         accuracy = tf.reduce_mean(tf.cast(prediction, "float"))
-        checkVector = prediction.eval({X: xTest, Y: yTest})
+        checkVector = tf.round(prediction.eval({X: xTest, Y: yTest}) * tf.constant(2))/tf.constant(2)
         print ("Train Accuracy:", accuracy.eval({X: xTest, Y: yTest}))
     
     return Youtput, checkVector
