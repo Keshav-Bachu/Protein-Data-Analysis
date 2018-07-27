@@ -10,7 +10,7 @@ import ProteinModelTrain as PMT
 import numpy as np
 import time
 
-
+"""
 trainingModule = JC.loadJsonDatabaseTraining()
 InputSize = 600
 
@@ -55,7 +55,7 @@ for i in range(len(trainingModule)):
     
 Xparams = Xparams[:, 1:]
 Yparams = Yparams[:, 1:]
-
+"""
 
 #time used to test runtime of various changes to in calculating cost etc.
 start_time = time.time()
@@ -64,7 +64,7 @@ start_time = time.time()
 #weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 4, 4, 3])
 
 #final network, shape tennative
-weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 64, 64, 64, 64,128, 128, 32, 32, 32, 32, 3], itterations = 20000,  minibatchSize= 6995)
+weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 64, 64, 64, 64,128, 128, 32, 32, 32, 32, 3], itterations = 10000,  minibatchSize= 1000, weightsExist = weights, learning_rate=0.000001)
 
 
 print("--- %s seconds ---" % (time.time() - start_time))
