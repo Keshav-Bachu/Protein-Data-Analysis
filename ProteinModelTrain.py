@@ -111,17 +111,17 @@ def computeCost(finalZ, Y):
     labels = Y
     
     #cost = tf.nn.softmax_cross_entropy_with_logits(logits = logits, labels = labels)
-    #cost = tf.reduce_mean(tf.squared_difference(logits, labels))
+    cost = tf.reduce_mean(tf.squared_difference(logits, labels))
     
     
     #a = tf.pow(tf.log(tf.abs(10 * logits[0, :] - 10 * labels[0, :]) + 10**-8), 2)
-    a = (1 / (2**0.5)) * tf.square(tf.sqrt(tf.abs(logits[0, :])) - tf.sqrt(tf.abs(labels[0, :])))   #Hellinger distance
+    #a = (1 / (2**0.5)) * tf.square(tf.sqrt(tf.abs(logits[0, :])) - tf.sqrt(tf.abs(labels[0, :])))   #Hellinger distance
     #a = tf.squared_difference(logits[1, :], labels[1, :])
-    b = tf.squared_difference(logits[1, :], labels[1, :])
-    c = tf.squared_difference(logits[2, :], labels[2, :])
-    fin = tf.stack([a,b,c])
+    #b = tf.squared_difference(logits[1, :], labels[1, :])
+    #c = tf.squared_difference(logits[2, :], labels[2, :])
+    #fin = tf.stack([a,b,c])
     
-    cost = tf.reduce_mean(fin)
+    #cost = tf.reduce_mean(fin)
     
     return cost
 
