@@ -64,13 +64,30 @@ start_time = time.time()
 #weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [4, 4, 4, 4, 3])
 
 #final network, shape tennative
-weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 64, 64, 64, 64,128, 128, 32, 32, 32, 32, 3], itterations = 10000,  minibatchSize= 1000, weightsExist = weights, learning_rate=0.0000001)
+netShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 64, 64, 64, 64,128, 128, 32, 32, 32, 32, 3]
+weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = netShape, itterations = 10000,  minibatchSize= 1000, weightsExist = weights, learning_rate=0.0000001)
 
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
-
+def evalRescale(prediction , Yparams = None):
+    prediction[0] *= 14
+    prediction[1] *= 5
+    prediction[2] *= 300
+    
+    if(Yparams != None):
+        Yparams[0] *= 14
+        Yparams[1] *= 5
+        Yparams[2] *= 300
+        
+        checkOutput = np.logical_and(np.greater(prediction, Yparams * 0.98), np.less(prediction, Yparams * 1.02))
+        
+        Yparams[0] /= 14
+        Yparams[1] /= 5
+        Yparams[2] /= 300
+        return checkOutput
+    
 
 """
 Reference to storing the numpy weights

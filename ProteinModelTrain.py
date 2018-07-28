@@ -230,9 +230,9 @@ def predictor(weights, networkShape, xTest, yTest):
         
         Youtput = Zfinal.eval({X: xTest, Y: yTest}) 
         
-        prediction = tf.logical_and(tf.greater(Zfinal, Y * 0.95), tf.less(Zfinal, Y * 1.05))
+        prediction = tf.logical_and(tf.greater(Zfinal, Y * 0.98), tf.less(Zfinal, Y * 1.02))
         accuracy = tf.reduce_mean(tf.cast(prediction, "float"))
-        checkVector = tf.round(prediction.eval({X: xTest, Y: yTest}) * tf.constant(2))/tf.constant(2)
+        checkVector = prediction.eval({X: xTest, Y: yTest})
         print ("Train Accuracy:", accuracy.eval({X: xTest, Y: yTest}))
     
     return Youtput, checkVector
