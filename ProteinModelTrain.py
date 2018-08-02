@@ -135,10 +135,12 @@ def computeCost(finalZ, Y):
 #Learning rate - step size of backprop
 #iterations -  Number of iterations of NN
 #print_cost - controles if cost is printed every 100 iterations
-def trainModel(xTest, yTest,networkShape, xDev = None, yDev = None,  learning_rate = 0.0001, itterations = 1500, print_Cost = True, weightsExist = None, minibatchSize = 1):
+def trainModel(xTest, yTest,netShape, xDev = None, yDev = None,  learning_rate = 0.0001, itterations = 1500, print_Cost = True, weightsExist = None, minibatchSize = 1):
  
     ops.reset_default_graph()
     costs = []                      #used to graph the costs at the end for a visual overview/analysis
+    networkShape = copy(netShape)
+    
  
     #Need to first create the tensorflow placeholders
     Xlen = xTest.shape[0]   #get the number of rows, aka features for the input data
