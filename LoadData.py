@@ -4,7 +4,6 @@ Created on Wed Jul 11 14:36:27 2018
 
 @author: Keshav Bachu
 """
-PMT.predictor(weights, netShape, Xparams, Yparams)
 import JSONConversion as JC
 import ProteinModelTrain as PMT
 import numpy as np
