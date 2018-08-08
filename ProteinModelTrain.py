@@ -128,6 +128,10 @@ def computeCost(finalZ, Y):
     
     #cost = tf.reduce_mean(fin)
     
+    #regularizationL2 = lambda/(2 * M) * norm(w) ** 2
+    #regularization = tf.nn.l2_loss(weights['W' + str( int(length/2) - 1)]) + tf.nn.l2_loss(weights['W' + str( int(length/2))]) + tf.nn.l2_loss(weights['W' + str( int(length/2) - 2)])
+    #cost = tf.reduce_mean(cost + reg_lambda * regularization)
+    
     return cost
 
 #Training the model, X and Y inputs for training and testing NN
