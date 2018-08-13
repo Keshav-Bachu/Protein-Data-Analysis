@@ -11,7 +11,7 @@ import time
 
 """
 trainingModule = JC.loadJsonDatabaseTraining()
-InputSize = 600
+InputSize = 200
 
 Yparams = np.zeros((3,1))
 Xparams = np.zeros((InputSize,1))
@@ -64,7 +64,7 @@ start_time = time.time()
 
 #final network, shape tennative
 netShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 64, 64, 64, 64,128, 128, 256, 256, 128, 128, 128, 128, 32, 32, 32, 32, 3]
-weights, prediction = PMT.trainModel(Xparams, Yparams, networkShape = netShape, itterations = 10000,  minibatchSize= 1000, weightsExist= weights, learning_rate=0.0000001)
+weights, prediction = PMT.trainModel(Xparams, Yparams, netShape = netShape, itterations = 5000,  minibatchSize= 1000, learning_rate=0.00001)
 
 
 print("--- %s seconds ---" % (time.time() - start_time))
