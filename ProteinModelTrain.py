@@ -108,7 +108,7 @@ def forwardProp(X, placeholders, networkShape):
     return pass_Z
 
 #Cost function for this sigmoid network
-def computeCost(finalZ, Y):
+def computeCost(finalZ, Y, weights):
     #logits = tf.transpose(finalZ)
     #labels = tf.transpose(Y)
     
@@ -129,8 +129,10 @@ def computeCost(finalZ, Y):
     #cost = tf.reduce_mean(fin)
     
     #regularizationL2 = lambda/(2 * M) * norm(w) ** 2
-    #regularization = tf.nn.l2_loss(weights['W' + str( int(length/2) - 1)]) + tf.nn.l2_loss(weights['W' + str( int(length/2))]) + tf.nn.l2_loss(weights['W' + str( int(length/2) - 2)])
-    #cost = tf.reduce_mean(cost + reg_lambda * regularization)
+    length = len(weights)
+    reg_lambda = 0.01
+    regularization = tf.nn.l2_loss(weights['W' + str( int(length/2) - 1)]) + tf.nn.l2_loss(weights['W' + str( int(length/2))]) + tf.nn.l2_loss(weights['W' + str( int(length/2) - 2)])
+    cost = tf.reduce_mean(cost + reg_lambda * regularization)
     
     return cost
 
@@ -158,7 +160,7 @@ def trainModel(xTest, yTest,netShape, xDev = None, yDev = None,  learning_rate =
     
     #define how Z and cost should be calculated
     Zfinal = forwardProp(X, placeholders, networkShape)
-    cost = computeCost(Zfinal, Y)
+    cost = computeCost(Zfinal, Y, placeholders)
     optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(cost)
     
     

@@ -64,7 +64,7 @@ start_time = time.time()
 
 #final network, shape tennative
 netShape = [512, 512, 512, 512, 256, 256, 256, 256, 128, 128, 64, 64, 64, 64,128, 128, 256, 256, 128, 128, 128, 128, 32, 32, 32, 32, 3]
-weights, prediction = PMT.trainModel(Xparams, Yparams, netShape = netShape, itterations = 5000,  minibatchSize= 1000, learning_rate=0.00001)
+weights, prediction = PMT.trainModel(Xparams, Yparams, netShape = netShape, itterations = 20000,  minibatchSize= 1000, learning_rate=0.0000003, weightsExist = weights)
 
 
 print("--- %s seconds ---" % (time.time() - start_time))
@@ -87,6 +87,56 @@ def evalRescale(prediction , Yparams = None):
         Yparams[2] /= 300
         return checkOutput
     
+    
+def loadData(checker = 0):
+    if checker == 0:
+        trainingModule = JC.loadJsonDatabaseTraining()
+    else:
+        trainingModule = JC.loadJsonDatabaseTest()
+    InputSize = 200
+    
+    Yparams = np.zeros((3,1))
+    Xparams = np.zeros((InputSize,1))
+    
+    #loop through and extract the data
+    for i in range(len(trainingModule)):
+        #load in and format the X parameters
+        #XparamsTemp = np.asarray(trainingModule[i]['data']['disorder'])
+        XparamsTemp = np.asarray(trainingModule[i]['data']['propensity'])
+        
+        #zero padding to keep inputs the same size
+        if(len(XparamsTemp) <  InputSize):
+            print(len(XparamsTemp))
+            zero_pad = np.zeros((1, InputSize - len(XparamsTemp)))
+            XparamsTemp = np.append(XparamsTemp, zero_pad)
+            XparamsTemp = XparamsTemp.reshape(InputSize, 1)
+            
+            #remove all NaNs, and replace with 0 as a representation of not used
+            where_are_NaNs = np.isnan(XparamsTemp)
+            XparamsTemp[where_are_NaNs] = -1
+            
+            Xparams = np.append(Xparams, XparamsTemp, 1)
+            
+            
+            #Load in and format the Y parameters
+            YparamsTemp = (trainingModule[i]['meta']['conditions']['pH'])/14
+            YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['ionic strength']/5)
+            YparamsTemp = np.append(YparamsTemp, trainingModule[i]['meta']['conditions']['temperature']/300)
+            YparamsTemp = YparamsTemp.reshape(3,1)
+            
+            Yparams = np.append(Yparams, YparamsTemp, 1)
+            
+            '''
+            #loads only 1, for testing
+            YparamsTemp = np.asarray(trainingModule[i]['meta']['conditions']['ionic strength'])
+            YparamsTemp = YparamsTemp.reshape(1,1)
+            Yparams = np.append(Yparams, YparamsTemp, 1)
+            '''
+            
+        
+    Xparams = Xparams[:, 1:]
+    Yparams = Yparams[:, 1:]
+    return Xparams, Yparams
 
 """
 Reference to storing the numpy weights
